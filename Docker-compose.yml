@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/nextcode
+      SPRING_DATASOURCE_USERNAME: nextcode
+      SPRING_DATASOURCE_PASSWORD: 1111
+      SPRING_DATASOURCE_DB: garden
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: true
+      SPRING_FLYWAY_ENABLED: true
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    container_name: next-postgres
+    environment:
+      POSTGRES_DB: nextcode
+      POSTGRES_USER: nextcode
+      POSTGRES_PASSWORD: 1111
+    ports:
+      - "5456:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
