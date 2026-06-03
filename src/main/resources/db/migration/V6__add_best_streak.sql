@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD COLUMN best_streak BIGINT NOT NULL DEFAULT 0;

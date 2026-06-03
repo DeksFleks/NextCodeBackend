@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD COLUMN xp_for_next_level INTEGER NOT NULL DEFAULT 100;

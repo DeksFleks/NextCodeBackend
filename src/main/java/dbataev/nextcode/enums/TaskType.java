@@ -1,4 +1,4 @@
-package dbataev.nextcode;
+package dbataev.nextcode.enums;
 
 public enum TaskType {
     TEST,

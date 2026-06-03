@@ -20,3 +20,4 @@ public class QuoteController {
         return quoteService.getRendomQuote();
     }
 }
+

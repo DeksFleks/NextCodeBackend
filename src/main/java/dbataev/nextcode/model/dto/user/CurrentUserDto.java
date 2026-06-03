@@ -12,4 +12,8 @@ public class CurrentUserDto {
     Integer xp;
     Integer level;
     Integer streak;
+    Integer xpForNextLevel;
+    Long currentCourseId;
+    Long totalXp;
+    Long bestStreak;
 }

@@ -1,6 +1,6 @@
 package dbataev.nextcode.model.dto;
 
-import dbataev.nextcode.TaskType;
+import dbataev.nextcode.enums.TaskType;
 import lombok.Data;
 
 import java.util.List;

@@ -2,11 +2,10 @@ package dbataev.nextcode.model.mapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dbataev.nextcode.TaskType;
+import dbataev.nextcode.enums.TaskType;
 import dbataev.nextcode.model.base.Task;
 import dbataev.nextcode.model.dto.TaskDto;
 
-import java.util.Collections;
 import java.util.List;
 
 public class TaskMapper {

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserProgressRepository extends JpaRepository<UserProgress, Long> {
 
@@ -22,4 +23,6 @@ public interface UserProgressRepository extends JpaRepository<UserProgress, Long
             @Param("userId") Long userId,
             @Param("courseId") Long courseId
     );
+
+    Optional<UserProgress> findByUserIdAndLessonId(Long userId, Long lessonId);
 }

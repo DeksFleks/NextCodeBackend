@@ -27,4 +27,18 @@ public class User {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "xp_for_next_level")
+    private Integer xpForNextLevel;
+
+    @ManyToOne
+    @JoinColumn(name = "current_course_id")
+    private Course currentCourse;
+
+    @Column(name = "total_xp", nullable = false)
+    private Long totalXp = 0L;
+
+    @Column(name = "best_streak", nullable = false)
+    private Long bestStreak;
+
 }

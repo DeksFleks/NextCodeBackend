@@ -1,9 +1,7 @@
 package dbataev.nextcode.model.dto;
 
-import dbataev.nextcode.LessonState;
+import dbataev.nextcode.enums.LessonState;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class LessonDto {

@@ -1,11 +1,8 @@
 package dbataev.nextcode.model.mapper;
 
-import dbataev.nextcode.LessonState;
+import dbataev.nextcode.enums.LessonState;
 import dbataev.nextcode.model.base.Lesson;
 import dbataev.nextcode.model.dto.LessonDto;
-import dbataev.nextcode.model.dto.TaskDto;
-
-import java.util.List;
 
 public class LessonMapper {
     public static LessonDto toDto(Lesson lesson, LessonState state) {

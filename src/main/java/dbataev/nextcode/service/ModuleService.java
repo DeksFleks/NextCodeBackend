@@ -1,14 +1,11 @@
 package dbataev.nextcode.service;
 
-import dbataev.nextcode.LessonState;
+import dbataev.nextcode.enums.LessonState;
 import dbataev.nextcode.model.base.Lesson;
 import dbataev.nextcode.model.base.Module;
-import dbataev.nextcode.model.base.Task;
 import dbataev.nextcode.model.dto.LessonDto;
 import dbataev.nextcode.model.dto.ModuleDto;
-import dbataev.nextcode.model.dto.TaskDto;
 import dbataev.nextcode.model.manyToMany.ModuleLesson;
-import dbataev.nextcode.model.mapper.LessonMapper;
 import dbataev.nextcode.model.mapper.ModuleMapper;
 import dbataev.nextcode.repository.ModuleRepository;
 import dbataev.nextcode.repository.UserProgressRepository;
