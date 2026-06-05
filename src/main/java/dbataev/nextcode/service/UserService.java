@@ -96,7 +96,8 @@ public class UserService {
                 user.getXpForNextLevel(),
                 user.getCurrentCourse().getId(),
                 user.getTotalXp(),
-                user.getBestStreak()
+                user.getBestStreak(),
+                user.getCompletedLessons()
         );
     }
 

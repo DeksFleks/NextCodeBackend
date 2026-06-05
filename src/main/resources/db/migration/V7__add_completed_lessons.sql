@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD COLUMN completed_lessons INTEGER NOT NULL DEFAULT 0;

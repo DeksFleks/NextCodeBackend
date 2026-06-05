@@ -16,4 +16,5 @@ public class CurrentUserDto {
     Long currentCourseId;
     Long totalXp;
     Long bestStreak;
+    Integer completedLessons;
 }

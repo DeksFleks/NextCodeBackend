@@ -41,4 +41,7 @@ public class User {
     @Column(name = "best_streak", nullable = false)
     private Long bestStreak;
 
+    @Column(name = "completed_lessons", nullable = false)
+    private Integer completedLessons;
+
 }
