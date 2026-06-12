@@ -1,7 +1,10 @@
 package dbataev.nextcode.controller;
 
+import dbataev.nextcode.model.dto.AchievementDto;
 import dbataev.nextcode.service.LessonService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/lesson")
@@ -13,9 +16,9 @@ public class LessonController {
     }
 
     @PostMapping("{lessonId}/completed")
-    public void lessonCompleted(@PathVariable Long lessonId, @RequestHeader("Authorization") String authHeader) {
+    public List<AchievementDto> lessonCompleted(@PathVariable Long lessonId, @RequestHeader("Authorization") String authHeader) {
         String jwt = authHeader.replace("Bearer ", "");
 
-        lessonService.lessonCompleted(lessonId, jwt);
+        return lessonService.lessonCompleted(lessonId, jwt);
     }
 }

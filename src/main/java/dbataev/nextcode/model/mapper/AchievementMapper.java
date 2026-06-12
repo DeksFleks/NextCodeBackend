@@ -11,6 +11,7 @@ public class AchievementMapper {
         dto.setDescription(achievement.getDescription());
         dto.setType(achievement.getType());
         dto.setConditionValue(achievement.getConditionValue());
+        dto.setLevelType(achievement.getLevelType());
 
         return dto;
     }

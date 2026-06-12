@@ -12,7 +12,9 @@ import dbataev.nextcode.enums.AchievementType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class AchievementService {
@@ -28,7 +30,7 @@ public class AchievementService {
         List<Achievement> achievements = achievementRepository.findAll();
         List<AchievementDto> achievementDtos = new ArrayList<>();
 
-        for(Achievement achievement : achievements) {
+        for (Achievement achievement : achievements) {
             achievementDtos.add(AchievementMapper.toDto(achievement));
         }
 
@@ -36,29 +38,44 @@ public class AchievementService {
     }
 
     public List<AchievementDto> checkAchievements(User user, AchievementType type) {
+        Long currentValue = getCurrentValueByType(user, type);
+
+        if (currentValue == null) {
+            return List.of();
+        }
+
         List<Achievement> achievements = achievementRepository.findByType(type);
+
+        Set<Long> receivedAchievementIds = new HashSet<>(
+                userAchievementRepository.findAchievementIdsByUserIdAndType(user.getId(), type)
+        );
+
+        List<UserAchievements> achievementsToSave = new ArrayList<>();
         List<AchievementDto> achievementDtos = new ArrayList<>();
 
+        LocalDateTime now = LocalDateTime.now();
+
         for (Achievement achievement : achievements) {
-            if (userAchievementRepository.existsByUserIdAndAchievementId(user.getId(), achievement.getId())) continue;
-            else {
-                if (type == AchievementType.LESSONS_COMPLETED) {
-                    Integer conditionValue = achievement.getConditionValue();
-                    Integer currentValue = user.getCompletedLessons();
-
-                    if (currentValue >= conditionValue) {
-                        UserAchievements userAchievements = new UserAchievements();
-
-                        userAchievements.setUser(user);
-                        userAchievements.setAchievement(achievement);
-                        userAchievements.setAchievedAt(LocalDateTime.now());
-
-                        achievementDtos.add(AchievementMapper.toDto(achievement));
-
-                        userAchievementRepository.save(userAchievements);
-                    }
-                }
+            if (receivedAchievementIds.contains(achievement.getId())) {
+                continue;
             }
+
+            Integer conditionValue = achievement.getConditionValue();
+
+            if (conditionValue != null && currentValue >= conditionValue) {
+                UserAchievements userAchievement = new UserAchievements();
+
+                userAchievement.setUser(user);
+                userAchievement.setAchievement(achievement);
+                userAchievement.setAchievedAt(now);
+
+                achievementsToSave.add(userAchievement);
+                achievementDtos.add(AchievementMapper.toDto(achievement));
+            }
+        }
+
+        if (!achievementsToSave.isEmpty()) {
+            userAchievementRepository.saveAll(achievementsToSave);
         }
 
         return achievementDtos;
@@ -75,12 +92,12 @@ public class AchievementService {
     }
 
     private Long getCurrentValueByType(User user, AchievementType type) {
-        return switch (type){
+        return switch (type) {
             case LESSONS_COMPLETED -> user.getCompletedLessons().longValue();
             case COURSES_COMPLETED -> null;
             case XP_EARNED -> null;
-            case LEVEL_REACHED -> null;
-            case STREAK_DAYS -> null;
+            case LEVEL_REACHED -> user.getLevel().longValue();
+            case STREAK_DAYS -> user.getBestStreak().longValue();
             case DAILY_COMPLETED -> null;
             case TASKS_COMPLETED -> null;
         };

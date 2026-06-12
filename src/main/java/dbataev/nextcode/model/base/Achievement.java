@@ -1,6 +1,7 @@
 package dbataev.nextcode.model.base;
 
 import dbataev.nextcode.enums.AchievementType;
+import dbataev.nextcode.enums.LevelAchievementType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,4 +31,8 @@ public class Achievement {
 
     @Column(name = "is_deleted")
     private Boolean isDeleted;
+
+    @Column(name = "level_type")
+    @Enumerated(EnumType.STRING)
+    private LevelAchievementType levelType;
 }
