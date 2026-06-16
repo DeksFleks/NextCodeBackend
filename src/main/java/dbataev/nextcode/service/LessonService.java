@@ -8,6 +8,7 @@ import dbataev.nextcode.repository.LessonRepository;
 import dbataev.nextcode.repository.UserProgressRepository;
 import dbataev.nextcode.repository.UserRepository;
 import dbataev.nextcode.security.jwt.JwtService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class LessonService {
         this.achievementService = achievementService;
     }
 
-
+    @Transactional
     public List<AchievementDto> lessonCompleted(Long lessonId, String jwt) {
         List<AchievementDto> achievementDtos = new ArrayList<>();
 

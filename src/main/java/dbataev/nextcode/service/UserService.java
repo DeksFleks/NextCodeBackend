@@ -42,6 +42,9 @@ public class UserService {
         newUser.setStreak(0);
         newUser.setCreatedAt(LocalDateTime.now());
         newUser.setXpForNextLevel(100);
+        newUser.setTotalXp(0L);
+        newUser.setBestStreak(0L);
+        newUser.setCompletedLessons(0);
 
         if(user.getNickname() == null || user.getNickname().isBlank()){
             Long nextNumber = userRepository.getNextDeveloperNicknameNumber();
