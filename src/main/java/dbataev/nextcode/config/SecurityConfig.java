@@ -1,4 +1,4 @@
-package dbataev.nextcode.security;
+package dbataev.nextcode.config;
 
 import dbataev.nextcode.security.jwt.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login", "/api/compiler/*").permitAll()
                         .anyRequest().authenticated()
                 )
 
