@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CurrentUserDto {
+    Long languageId;
     Long id;
     String username;
     String nickname;

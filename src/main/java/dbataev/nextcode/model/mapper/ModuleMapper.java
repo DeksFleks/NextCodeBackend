@@ -33,11 +33,7 @@ public class ModuleMapper {
         for (ModuleLesson moduleLesson : moduleLessons) {
             Lesson lesson = moduleLesson.getLesson();
 
-            LessonDto lessonDto = new LessonDto();
-            lessonDto.setId(lesson.getId());
-            lessonDto.setTitle(lesson.getTitle());
-            lessonDto.setXpReward(lesson.getXpReward());
-            lessonDto.setTheoryText(lesson.getTheoryText());
+            LessonDto lessonDto = LessonMapper.toDto(lesson, null);
 
             lessonDtos.add(lessonDto);
         }

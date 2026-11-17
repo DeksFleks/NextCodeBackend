@@ -1,26 +1,21 @@
 package dbataev.nextcode.controller;
-
-import dbataev.nextcode.model.base.Task;
-import dbataev.nextcode.model.dto.TaskDto;
+import dbataev.nextcode.model.dto.*;
 import dbataev.nextcode.service.TaskService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
 @RestController
-@RequestMapping(path = "api/tasks")
+@RequestMapping("api/tasks")
 public class TaskController {
-    private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
+    private final TaskService tasks;
+    public TaskController(TaskService tasks) { this.tasks = tasks; }
+    @GetMapping("/bylesson/{lessonId}")
+    public List<TaskDto> getByLessonId(@PathVariable Long lessonId, Authentication auth) {
+        return tasks.findLessonTasks(lessonId, (Long) auth.getPrincipal());
     }
-
-    @GetMapping(path = "/bylesson/{lessonId}")
-    public List<TaskDto> getByLessonId(@PathVariable Long lessonId) {
-        return taskService.findLessonTasks(lessonId);
+    @PostMapping("/{taskId}/check")
+    public TaskResult check(@PathVariable Long taskId, Authentication auth, @Valid @RequestBody TaskAnswer answer) {
+        return tasks.check(taskId, (Long) auth.getPrincipal(), answer);
     }
 }

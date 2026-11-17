@@ -90,6 +90,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 
         return new CurrentUserDto(
+                user.getLanguageId(),
                 user.getId(),
                 user.getUsername(),
                 user.getNickname(),
@@ -97,7 +98,7 @@ public class UserService {
                 user.getLevel(),
                 user.getStreak(),
                 user.getXpForNextLevel(),
-                user.getCurrentCourse().getId(),
+                user.getCurrentCourse() == null ? null : user.getCurrentCourse().getId(),
                 user.getTotalXp(),
                 user.getBestStreak(),
                 user.getCompletedLessons()

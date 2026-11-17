@@ -1,0 +1,7 @@
+package dbataev.nextcode.repository;
+import dbataev.nextcode.model.content.Language;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+public interface LanguageRepository extends JpaRepository<Language, Long> {
+    List<Language> findByIsActiveTrueOrderByIdAsc();
+}

@@ -13,6 +13,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "language_id", nullable = false)
+    private Long languageId = 1L;
+
     private String username;
     private String nickname;
     private Integer  xp;
