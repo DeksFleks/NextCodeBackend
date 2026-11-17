@@ -15,12 +15,15 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+@org.springframework.transaction.annotation.Transactional(readOnly = true)
 public class ModuleService {
+    private final ContentLanguageService contentLanguageService;
     private final ModuleRepository moduleRepository;
     private final UserProgressRepository userProgressRepository;
     private final JwtService jwtService;
 
-    public ModuleService(ModuleRepository moduleRepository, UserProgressRepository userProgressRepository, JwtService jwtService) {
+    public ModuleService(ModuleRepository moduleRepository, UserProgressRepository userProgressRepository, JwtService jwtService, ContentLanguageService contentLanguageService) {
+        this.contentLanguageService = contentLanguageService;
         this.moduleRepository = moduleRepository;
         this.userProgressRepository = userProgressRepository;
         this.jwtService = jwtService;
@@ -43,6 +46,7 @@ public class ModuleService {
         modules.sort(Comparator.comparing(Module::getOrderIndex));
 
         Long userId = jwtService.extractUserId(jwt);
+        Long languageId = contentLanguageService.forUser(userId);
         List<ModuleDto> result = new ArrayList<>();
         Set<Long> completedLessonIds = new HashSet<>(userProgressRepository.findCompletedLessonIdsByUserIdAndCourseId(userId, courseId));
         boolean currentAssigned = false;
@@ -62,6 +66,7 @@ public class ModuleService {
 
             for (ModuleLesson moduleLesson : moduleLessons) {
                 Lesson lesson = moduleLesson.getLesson();
+                if (Boolean.TRUE.equals(lesson.getIsDeleted())) continue;
 
                 LessonState state;
 
@@ -74,12 +79,8 @@ public class ModuleService {
                     state = LessonState.BLOCKED;
                 }
 
-                LessonDto lessonDto = new LessonDto();
-                lessonDto.setId(lesson.getId());
-                lessonDto.setTitle(lesson.getTitle());
-                lessonDto.setXpReward(lesson.getXpReward());
-                lessonDto.setTheoryText(lesson.getTheoryText());
-                lessonDto.setState(state);
+                LessonDto lessonDto = dbataev.nextcode.model.mapper.LessonMapper.toDto(
+                    lesson, state, languageId);
 
                 lessonDtos.add(lessonDto);
             }

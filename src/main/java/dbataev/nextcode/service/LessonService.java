@@ -19,11 +19,13 @@ public class LessonService {
     private final UserProgressRepository userProgressRepository;
     private final UserRepository userRepository;
     private final LessonRepository lessonRepository;
+    private final TaskService tasks;
     private final UserService userService;
     private final JwtService jwtService;
     private final AchievementService achievementService;
 
-    public LessonService(UserProgressRepository userProgressRepository, UserRepository userRepository, LessonRepository lessonRepository, UserService userService, JwtService jwtService, AchievementService achievementService) {
+    public LessonService(UserProgressRepository userProgressRepository, UserRepository userRepository, LessonRepository lessonRepository, UserService userService, JwtService jwtService, AchievementService achievementService, TaskService tasks) {
+        this.tasks = tasks;
         this.userProgressRepository = userProgressRepository;
         this.userRepository = userRepository;
         this.lessonRepository = lessonRepository;
@@ -36,14 +38,17 @@ public class LessonService {
     public List<AchievementDto> lessonCompleted(Long lessonId, String jwt) {
         List<AchievementDto> achievementDtos = new ArrayList<>();
 
-        User user = userRepository.findById(jwtService.extractUserId(jwt))
+        User user = userRepository.findForUpdate(jwtService.extractUserId(jwt))
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new RuntimeException("Урок не найден"));
         UserProgress userProgress = userProgressRepository.findByUserIdAndLessonId(user.getId(), lessonId)
                 .orElse(null);
 
-        boolean alreadyCompleted = userProgress != null && userProgress.getIsCompleted();
+        boolean alreadyCompleted = userProgress != null && Boolean.TRUE.equals(userProgress.getIsCompleted());
+
+        if (alreadyCompleted) return List.of();
+        tasks.requirePassed(lessonId, user.getId());
 
         if (userProgress == null) {
             userProgress = new UserProgress();
@@ -53,11 +58,7 @@ public class LessonService {
 
         Integer reward = lesson.getXpReward();
 
-        if (alreadyCompleted) {
-            reward = reward / 5;
-        }
 
-        System.out.println("Точка 0: " + user.getCompletedLessons());
 
         user.setTotalXp(user.getTotalXp() + reward);
         user.setXp(user.getXp() + reward);
@@ -66,16 +67,14 @@ public class LessonService {
         user = userService.checkLevel(user);
 
         userProgress.setIsCompleted(true);
+        userProgress.setCompletedAt(java.time.LocalDateTime.now());
 
-        System.out.println("Точка 1: " + user.getCompletedLessons());
 
         achievementDtos.addAll(achievementService.checkAllAchievements(user));
 
-        System.out.println("Точка 2: " + user.getCompletedLessons());
 
         userRepository.save(user);
 
-        System.out.println("Точка 3: " + user.getCompletedLessons());
 
         userProgressRepository.save(userProgress);
 
