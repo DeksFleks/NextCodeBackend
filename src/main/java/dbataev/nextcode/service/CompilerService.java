@@ -7,7 +7,6 @@ import dbataev.nextcode.model.dto.judge0.Judge0SubmissionRequest;
 import dbataev.nextcode.model.dto.judge0.Judge0SubmissionResponse;
 import dbataev.nextcode.model.dto.judge0.LanguageDto;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -23,21 +22,28 @@ public class CompilerService {
     }
 
     public CompilerResponse execute(CompilerRequest compilerRequest) {
-        Integer language = 62;
 
-        Judge0SubmissionResponse response  = judge0Client.execute(
-            new Judge0SubmissionRequest(
-                    language,
-                    compilerRequest.getCode(),
-                    compilerRequest.getInput()
-            )
+        Integer languageId = switch (compilerRequest.getLanguage().toLowerCase()) {
+            case "java" -> 62;
+            case "c#" -> 51;
+            default -> throw new IllegalArgumentException(
+                    "Unsupported language: " + compilerRequest.getLanguage()
+            );
+        };
+
+        Judge0SubmissionResponse response = judge0Client.execute(
+                new Judge0SubmissionRequest(
+                        languageId,
+                        compilerRequest.getCode(),
+                        compilerRequest.getInput()
+                )
         );
 
         return new CompilerResponse(
                 response.getStdout(),
                 response.getStderr(),
                 response.getCompileOutput(),
-                response.getStatus().getId() == 3
+                response.getStatus() != null && response.getStatus().getId() == 3
         );
     }
 }
